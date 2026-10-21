@@ -1,0 +1,134 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Everything on the profile comes from this file.
+#  Edit it, push, and the "Build profile" workflow regenerates every image
+#  in assets/ plus the marked blocks in README.md (about a minute).
+# ─────────────────────────────────────────────────────────────────────────────
+
+[user]
+login    = "abhishekgoswami0720"
+name     = "Abhishek Goswami"
+headline = "B.Tech CSE (AI & ML) · GLA University"
+location = "Barsana, India"
+greeting = "~$ whoami"
+chips    = ["AI / ML", "Full-stack", "Hackathons", "Community builder"]
+
+[typing]
+# Lines cycle forever in the typing banner. Keep each under ~60 characters.
+lines = [
+  "building AI products people actually use",
+  "Smart India Hackathon 2026 · internal top 45 of 450+",
+  "CodeFiesta 5.0 · top 15 → PIET Panipat grand finale",
+  "founder of Let's Cook, a student tech community",
+  "preparing for Google Summer of Code 2027",
+]
+
+# Badges under the header. Add LinkedIn / email by uncommenting and filling in.
+[[links]]
+label   = "Let's Cook"
+message = "letscook.co.in"
+url     = "https://letscook.co.in"
+color   = "f5a524"
+
+# [[links]]
+# label   = "LinkedIn"
+# message = "Abhishek Goswami"
+# url     = "https://www.linkedin.com/in/YOUR-HANDLE"
+# color   = "0a66c2"
+
+# [[links]]
+# label   = "Email"
+# message = "you@example.com"
+# url     = "mailto:you@example.com"
+# color   = "2dd4bf"
+
+# ── Featured projects (shown as cards, two per row) ──────────────────────────
+# icon: voice | shield | orbit | chart | spark      accent: amber | teal | coral
+[[projects]]
+name        = "MandiQ"
+repo        = "abhishekgoswami0720/Team-RootCause----MandiQ----SIH-2026"
+live        = "https://frontend-omega-fawn-51.vercel.app/"
+badge       = "SIH 2026 · team lead"
+description = "Voice-first procurement slot booking for farmers. Call an IVR line in your own language to book or check a mandi slot, no smartphone needed."
+stack       = ["FastAPI", "React", "WebSockets", "Voice"]
+icon        = "voice"
+accent      = "amber"
+
+[[projects]]
+name        = "InReal"
+repo        = "abhishekgoswami0720/InReal"
+badge       = "PIET Panipat · grand finale"
+description = "Searches internships across 23 job sites at once and runs every posting through an AI scam check before you ever see it."
+stack       = ["Python", "Flask", "Playwright", "Supabase", "n8n"]
+icon        = "shield"
+accent      = "teal"
+
+[[projects]]
+name        = "NEXUS Countdown"
+repo        = "abhishekgoswami0720/NEXUS-Countdown"
+badge       = "3D · motion"
+description = "A cinematic countdown experience rendered in real-time 3D, with choreographed camera and UI motion."
+stack       = ["React", "TypeScript", "Three.js", "GSAP"]
+icon        = "orbit"
+accent      = "coral"
+
+[[projects]]
+name        = "Travel SIM Dashboard"
+repo        = "abhishekgoswami0720/Travel-Sim-Sales-Dashboard"
+live        = "https://travel-sim-sales-dashboard-nine.vercel.app"
+badge       = "analytics"
+description = "Sales analytics for Travel SIM orders: order trends, KPI cards and a staff leaderboard, all served from a single Postgres function."
+stack       = ["Supabase", "PostgreSQL", "Chart.js"]
+icon        = "chart"
+accent      = "amber"
+
+# Uncomment once the code is pushed — the repo is empty right now.
+# [[projects]]
+# name        = "FairView"
+# repo        = "abhishekgoswami0720/FairView-An-AI-Powered-Bias-detector"
+# badge       = "AIML mini project · solo"
+# description = "Flags bias in employee performance reviews with an ML engine, with separate client, manager and employee views."
+# stack       = ["React", "Node", "MongoDB", "Python ML"]
+# icon        = "spark"
+# accent      = "teal"
+
+# ── Tech stack (IDs from https://skillicons.dev) ─────────────────────────────
+[stack]
+icons   = ["py", "js", "ts", "html", "css", "react", "nodejs", "express", "fastapi", "flask",
+           "threejs", "vite", "mongodb", "postgres", "sqlite", "supabase", "git", "github", "vercel", "aws"]
+perline = 10
+
+# ── Timeline ("The road so far") ─────────────────────────────────────────────
+# status: done | next
+[[timeline]]
+when   = "2026"
+title  = "Founded Let's Cook"
+detail = "Student-run tech community: workshops and hackathons"
+status = "done"
+
+[[timeline]]
+when   = "Sep 2026"
+title  = "Smart India Hackathon"
+detail = "Internal round: top 45 of 450+ teams, leading MandiQ"
+status = "done"
+
+[[timeline]]
+when   = "Oct 2026"
+title  = "CodeFiesta 5.0"
+detail = "GIT Jaipur: top 15 with GigWallet, a Web3 credential wallet"
+status = "done"
+
+[[timeline]]
+when   = "Oct 2026"
+title  = "PIET Panipat finale"
+detail = "36-hour grand finale: built InReal"
+status = "done"
+
+[[timeline]]
+when   = "2027"
+title  = "Google Summer of Code"
+detail = "The next one on the list"
+status = "next"
+
+[stats]
+# Languages to leave out of the languages card (e.g. notebooks inflate Python).
+exclude_languages = ["Jupyter Notebook", "Batchfile"]
