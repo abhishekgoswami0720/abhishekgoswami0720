@@ -1,0 +1,52 @@
+name: Build profile
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - profile.toml
+      - scripts/**
+      - README.md
+      - .github/workflows/profile.yml
+  schedule:
+    - cron: "23 6,18 * * *" # 11:53 and 23:53 IST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-profile
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Generate images and README blocks
+        env:
+          # Optional: add a PROFILE_TOKEN secret (classic PAT, read:user) to count private contributions too.
+          GH_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: python3 scripts/build.py
+
+      - name: Generate contribution snake
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            assets/snake-light.svg?palette=github-light&color_snake=#b45309
+            assets/snake-dark.svg?palette=github-dark&color_snake=#f5a524
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A assets README.md
+          if git diff --cached --quiet; then
+            echo "Nothing changed."
+          else
+            git commit -m "chore: refresh profile images"
+            git push
+          fi
