@@ -73,5 +73,9 @@ Outside my own code I run **Let's Cook**, a student-run tech community that hold
 </p>
 
 <p align="center">
+<img alt="Profile views" src="https://komarev.com/ghpvc/?username=abhishekgoswami0720&label=profile+views&color=f5a524&style=flat-square">
+</p>
+
+<p align="center">
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/footer-dark.svg"><source media="(prefers-color-scheme: light)" srcset="assets/footer-light.svg"><img alt="Thanks for stopping by" src="assets/footer-dark.svg" width="100%"></picture>
 </p>
