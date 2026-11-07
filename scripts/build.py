@@ -104,13 +104,13 @@ def card_frame(w, h, t, r=16, uid="c"):
 
 # ── header ──────────────────────────────────────────────────────────────────
 def header(cfg, t):
-    W, H = 1000, 300
+    W, H = 1000, 320
     u = cfg["user"]
     rnd = random.Random(7)
 
     # neural net on the right
     layers = [3, 5, 5, 2]
-    x0, x1, cy, gap = 655, 925, 160, 36
+    x0, x1, cy, gap = 655, 925, 168, 36
     nodes = [
         [(x0 + (x1 - x0) * li / (len(layers) - 1), cy + (k - (n - 1) / 2) * gap) for k in range(n)]
         for li, n in enumerate(layers)
@@ -144,8 +144,8 @@ def header(cfg, t):
         txt = t["amber"] if i == 0 else t["muted"]
         chips.append(
             f'<g class="rise" style="animation-delay:{0.55 + i * 0.08:.2f}s">'
-            f'<rect x="{cx}" y="222" width="{w:.1f}" height="30" rx="15" fill="{t["bg2"]}" stroke="{col}"/>'
-            f'<text class="m" x="{cx + w / 2:.1f}" y="241.5" font-size="13" fill="{txt}" text-anchor="middle">{esc(label)}</text></g>'
+            f'<rect x="{cx}" y="246" width="{w:.1f}" height="30" rx="15" fill="{t["bg2"]}" stroke="{col}"/>'
+            f'<text class="m" x="{cx + w / 2:.1f}" y="265.5" font-size="13" fill="{txt}" text-anchor="middle">{esc(label)}</text></g>'
         )
         cx += w + 10
 
@@ -177,7 +177,12 @@ def header(cfg, t):
         f'<rect class="cur" x="{56 + gw + 6:.1f}" y="72" width="8" height="16" fill="{t["amber"]}"/>'
         f'<text class="s rise" x="54" y="148" font-size="56" font-weight="700" letter-spacing="-1.2" '
         f'fill="{t["text"]}" style="animation-delay:.12s">{esc(u["name"])}</text>'
-        f'<text class="s rise" x="56" y="190" font-size="19" fill="{t["muted"]}" style="animation-delay:.3s">'
+        + (
+            f'<g class="rise" style="animation-delay:.24s"><rect x="56" y="170" width="4" height="26" rx="2" fill="{t["amber"]}"/>'
+            f'<text class="s" x="70" y="190" font-size="20" font-weight="700" fill="{t["amber"]}">{esc(u["role"])}</text></g>'
+            if u.get("role") else ""
+        )
+        + f'<text class="s rise" x="56" y="{224 if u.get("role") else 190}" font-size="17" fill="{t["muted"]}" style="animation-delay:.34s">'
         f'{esc(u.get("headline", ""))}</text>'
         + "".join(chips)
         + (
@@ -187,7 +192,7 @@ def header(cfg, t):
             else ""
         )
     )
-    return svg(W, H, body, css, f'{u["name"]} — {u.get("headline", "")}')
+    return svg(W, H, body, css, f'{u["name"]} — {u.get("role", "")} · {u.get("headline", "")}')
 
 
 # ── typing banner (SMIL, discrete frames → no font-dependent drift) ─────────
@@ -265,6 +270,12 @@ def icon(kind, x, y, col, t):
             f'fill="{col}" style="animation-delay:{0.2 + i * 0.12:.2f}s"/>'
             for i, h in enumerate(hs)
         )
+    if kind == "scan":
+        return (
+            f'<circle cx="{cx - 3}" cy="{cy - 3}" r="9" stroke="{col}" stroke-width="2.2"/>'
+            f'<path d="M{cx + 3.5},{cy + 3.5} l7,7" stroke="{col}" stroke-width="2.6" stroke-linecap="round"/>'
+            f'<path class="tick" d="M{cx - 7.5},{cy - 3} h9" stroke="{col}" stroke-width="2.2" stroke-linecap="round" pathLength="1"/>'
+        )
     # spark (default)
     return (
         f'<path class="spin" style="transform-origin:{cx}px {cy}px" d="M{cx},{cy - 12} L{cx + 3},{cy - 3} L{cx + 12},{cy} '
@@ -328,52 +339,116 @@ def project_card(p, t):
     return svg(W, H, body, css, f'{p["name"]}: {p["description"]}')
 
 
-# ── timeline ────────────────────────────────────────────────────────────────
+# ── timeline (vertical, so it can hold as many milestones as needed) ────────
 def timeline(cfg, t):
     items = cfg["timeline"]
-    n = len(items)
-    W, H, ly = 1000, 214, 76
-    xs = [110 + i * (780 / max(n - 1, 1)) for i in range(n)]
+    row, top = 62, 34
+    W = 1000
+    H = top * 2 + row * (len(items) - 1) + 20
+    lx = 150                                  # x of the line
+    ys = [top + 10 + i * row for i in range(len(items))]
     last_done = max([i for i, it in enumerate(items) if it.get("status") != "next"], default=0)
     css = (
         "@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}"
-        ".draw{stroke-dasharray:1;animation:draw 1.6s cubic-bezier(.4,0,.2,1) both}"
+        ".draw{stroke-dasharray:1;animation:draw 2s cubic-bezier(.4,0,.2,1) both}"
         "@keyframes pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}"
         ".pop{transform-box:fill-box;transform-origin:center;animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}"
-        "@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}"
+        "@keyframes fade{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}"
         ".fade{animation:fade .6s ease-out both}"
         "@keyframes halo{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.6);opacity:0}}"
         ".halo{transform-box:fill-box;transform-origin:center;animation:halo 2s ease-out infinite}"
     )
     parts = [
-        f'<line x1="{xs[0]}" y1="{ly}" x2="{xs[-1]}" y2="{ly}" stroke="{t["border"]}" stroke-width="2" stroke-dasharray="4 6"/>',
-        f'<line class="draw" x1="{xs[0]}" y1="{ly}" x2="{xs[last_done]}" y2="{ly}" stroke="{t["amber"]}" '
+        card_frame(W, H, t, uid="tl"),
+        f'<line x1="{lx}" y1="{ys[0]}" x2="{lx}" y2="{ys[-1]}" stroke="{t["border"]}" stroke-width="2" stroke-dasharray="4 6"/>',
+        f'<line class="draw" x1="{lx}" y1="{ys[0]}" x2="{lx}" y2="{ys[last_done]}" stroke="{t["amber"]}" '
         f'stroke-width="2.5" stroke-linecap="round" pathLength="1"/>',
     ]
-    for i, (x, it) in enumerate(zip(xs, items)):
+    for i, (y, it) in enumerate(zip(ys, items)):
         nxt = it.get("status") == "next"
-        col = t["coral"] if nxt else t["amber"]
-        d = 0.35 + i * 0.28
+        col = t["coral"] if nxt else t[it.get("accent", "amber")]
+        d = 0.2 + i * 0.22
         if nxt:
-            parts.append(f'<circle class="halo" cx="{x:.1f}" cy="{ly}" r="9" fill="{col}" style="animation-delay:{d + .5:.2f}s"/>')
+            parts.append(f'<circle class="halo" cx="{lx}" cy="{y}" r="9" fill="{col}" style="animation-delay:{d + .5:.2f}s"/>')
         parts.append(
             f'<g class="pop" style="animation-delay:{d:.2f}s">'
-            f'<circle cx="{x:.1f}" cy="{ly}" r="10" fill="{t["bg"]}" stroke="{col}" stroke-width="2.4"'
+            f'<circle cx="{lx}" cy="{y}" r="10" fill="{t["bg"]}" stroke="{col}" stroke-width="2.4"'
             + (' stroke-dasharray="3 3"' if nxt else "")
-            + f'/><circle cx="{x:.1f}" cy="{ly}" r="{3.5 if nxt else 4.5}" fill="{col}"/></g>'
-        )
-        sub = wrap(it.get("detail", ""), 13, 178, 3)
-        parts.append(
-            f'<g class="fade" style="animation-delay:{d + .1:.2f}s">'
-            f'<text class="m" x="{x:.1f}" y="{ly - 30}" font-size="12.5" fill="{col}" text-anchor="middle">{esc(it["when"])}</text>'
-            f'<text class="s" x="{x:.1f}" y="{ly + 42}" font-size="15" font-weight="650" fill="{t["text"]}" text-anchor="middle">{esc(it["title"])}</text>'
-            + "".join(
-                f'<text class="s" x="{x:.1f}" y="{ly + 64 + k * 18}" font-size="13" fill="{t["muted"]}" text-anchor="middle">{esc(s)}</text>'
-                for k, s in enumerate(sub)
-            )
+            + f'/><circle cx="{lx}" cy="{y}" r="{3.5 if nxt else 4.5}" fill="{col}"/></g>'
+            f'<g class="fade" style="animation-delay:{d + .08:.2f}s">'
+            f'<text class="m" x="{lx - 28}" y="{y + 4.5}" font-size="12.5" fill="{col}" text-anchor="end">{esc(it["when"])}</text>'
+            f'<text class="s" x="{lx + 30}" y="{y - 2}" font-size="16" font-weight="700" fill="{t["text"]}">{esc(it["title"])}</text>'
+            f'<text class="s" x="{lx + 30}" y="{y + 18}" font-size="13.5" fill="{t["muted"]}">{esc(it.get("detail", ""))}</text>'
+            + (f'<rect x="{W - 160}" y="{y - 13}" width="128" height="24" rx="12" fill="{col}" fill-opacity=".12"/>'
+               f'<text class="m" x="{W - 96}" y="{y + 3.5}" font-size="11.5" fill="{col}" text-anchor="middle">{esc(it["tag"])}</text>'
+               if it.get("tag") else "")
             + "</g>"
         )
     return svg(W, H, "".join(parts), css, "Timeline: " + "; ".join(f'{i["when"]} {i["title"]}' for i in items))
+
+
+# ── Let's Cook feature card ─────────────────────────────────────────────────
+def letscook(cfg, t):
+    c = cfg["letscook"]
+    W, H = 1000, 360
+    css = (
+        "@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}"
+        ".rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}"
+        "@keyframes steam{0%{transform:translateY(6px);opacity:0}40%{opacity:.9}100%{transform:translateY(-14px);opacity:0}}"
+        ".st{animation:steam 2.6s ease-in-out infinite}"
+        "@keyframes flick{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.82)}}"
+        ".fl{transform-box:fill-box;transform-origin:bottom;animation:flick 1.1s ease-in-out infinite}"
+        "@keyframes glow{0%,100%{opacity:.35}50%{opacity:.8}}.gl{animation:glow 3s ease-in-out infinite}"
+    )
+    # pot + flame + steam mark
+    mx, my = 56, 52
+    mark = (
+        f'<rect x="{mx}" y="{my}" width="64" height="64" rx="18" fill="{t["amber"]}" fill-opacity=".14" stroke="{t["amber"]}" stroke-opacity=".4"/>'
+        + "".join(f'<path class="st" style="animation-delay:{k * .5:.1f}s" d="M{mx + 22 + k * 10},{my + 26} q-4,-5 0,-10 q4,-5 0,-10" '
+                  f'stroke="{t["amber"]}" stroke-width="2" stroke-linecap="round"/>' for k in range(3))
+        + f'<path d="M{mx + 14},{my + 32} h36 v10 a8,8 0 0 1 -8,8 h-20 a8,8 0 0 1 -8,-8 z" fill="{t["amber"]}"/>'
+        f'<rect x="{mx + 10}" y="{my + 30}" width="44" height="4" rx="2" fill="{t["amber"]}"/>'
+        f'<path class="fl" d="M{mx + 32},{my + 62} c-5,-3 -5,-8 0,-11 c5,3 5,8 0,11 z" fill="{t["coral"]}"/>'
+    )
+    stats = c.get("stats", [])
+    sw = (W - 112 - 24 * (len(stats) - 1)) / max(len(stats), 1)
+    tiles = []
+    for i, st in enumerate(stats):
+        x = 56 + i * (sw + 24)
+        col = t[["amber", "teal", "coral", "amber"][i % 4]]
+        tiles.append(
+            f'<g class="rise" style="animation-delay:{.35 + i * .1:.2f}s">'
+            f'<rect x="{x:.1f}" y="150" width="{sw:.1f}" height="86" rx="14" fill="{t["bg2"]}" stroke="{t["border"]}"/>'
+            f'<rect x="{x:.1f}" y="150" width="4" height="86" rx="2" fill="{col}"/>'
+            f'<text class="s" x="{x + 22:.1f}" y="190" font-size="30" font-weight="800" fill="{t["text"]}">{esc(st["value"])}</text>'
+            f'<text class="s" x="{x + 22:.1f}" y="214" font-size="13" fill="{t["muted"]}">{esc(st["label"])}</text></g>'
+        )
+    pills, px = [], 56
+    for i, label in enumerate(c.get("pillars", [])):
+        w = text_w(label, 13, mono=True) + 38
+        pills.append(
+            f'<g class="rise" style="animation-delay:{.75 + i * .07:.2f}s">'
+            f'<rect x="{px:.1f}" y="262" width="{w:.1f}" height="30" rx="15" fill="{t["bg"]}" stroke="{t["border"]}"/>'
+            f'<circle cx="{px + 14:.1f}" cy="277" r="3" fill="{t["amber"]}"/>'
+            f'<text class="m" x="{px + 24:.1f}" y="281.5" font-size="13" fill="{t["muted"]}">{esc(label)}</text></g>'
+        )
+        px += w + 10
+    role = c.get("role", "")
+    rw = text_w(role, 12.5, mono=True) + 26
+    body = (
+        card_frame(W, H, t, r=20, uid="lc")
+        + f'<defs><radialGradient id="lg"><stop offset="0" stop-color="{t["amber"]}" stop-opacity=".22"/>'
+        f'<stop offset="1" stop-color="{t["amber"]}" stop-opacity="0"/></radialGradient></defs>'
+        f'<g clip-path="url(#lc)"><circle class="gl" cx="900" cy="40" r="300" fill="url(#lg)"/></g>'
+        + mark
+        + f'<text class="s rise" x="138" y="84" font-size="34" font-weight="800" letter-spacing="-.8" fill="{t["text"]}">{esc(c["name"])}</text>'
+        f'<text class="s rise" x="140" y="110" font-size="15" fill="{t["muted"]}" style="animation-delay:.1s">{esc(c["tagline"])}</text>'
+        f'<g class="rise" style="animation-delay:.2s"><rect x="{W - 56 - rw:.1f}" y="62" width="{rw:.1f}" height="30" rx="15" fill="{t["amber"]}"/>'
+        f'<text class="m" x="{W - 56 - rw / 2:.1f}" y="81.5" font-size="12.5" font-weight="700" fill="{t["bg"]}" text-anchor="middle">{esc(role)}</text></g>'
+        + "".join(tiles) + "".join(pills)
+        + f'<text class="s rise" x="56" y="326" font-size="13.5" fill="{t["dim"]}" style="animation-delay:1.1s">{esc(c.get("footnote", ""))}</text>'
+    )
+    return svg(W, H, body, css, f'{c["name"]}: {c["tagline"]} — {role}')
 
 
 # ── footer ──────────────────────────────────────────────────────────────────
@@ -421,7 +496,7 @@ query($login:String!){ user(login:$login){
   pullRequests{ totalCount }
   repositories(ownerAffiliations:OWNER, isFork:false, privacy:PUBLIC, first:100){
     totalCount
-    nodes{ languages(first:10, orderBy:{field:SIZE, direction:DESC}){ edges{ size node{ name color } } } }
+    nodes{ stargazerCount languages(first:10, orderBy:{field:SIZE, direction:DESC}){ edges{ size node{ name color } } } }
   }
   contributionsCollection{
     totalCommitContributions
@@ -487,6 +562,7 @@ def fetch_stats(cfg, token):
         longest=longest_streak(all_days),
         commits=u["contributionsCollection"]["totalCommitContributions"],
         prs=u["pullRequests"]["totalCount"],
+        stars=sum(r["stargazerCount"] for r in u["repositories"]["nodes"]),
         repos=u["repositories"]["totalCount"],
         langs=langs,
         weeks=weeks,
@@ -518,7 +594,7 @@ def sample_stats():
         burst = 30 if i in (44, 45, 49, 50) else 0
         weeks.append(max(0, int(base + rnd.gauss(0, base * 0.6)) + burst))
     return dict(
-        past_year=sum(weeks), active_days=118, longest=17, commits=sum(weeks) - 40, prs=23, repos=9,
+        past_year=sum(weeks), active_days=118, longest=17, commits=sum(weeks) - 40, prs=23, stars=25, repos=9,
         langs={"Python": (520_000, "#3572A5"), "JavaScript": (310_000, "#f1e05a"), "TypeScript": (150_000, "#3178c6"),
                "HTML": (90_000, "#e34c26"), "CSS": (60_000, "#663399"), "PLpgSQL": (20_000, "#336790")},
         weeks=weeks, week_starts=starts,
@@ -536,7 +612,7 @@ def stats_card(st, t, updated):
         (fmt(st["active_days"]), "active days", "past year", t["teal"]),
         (f'{st["longest"]}d', "longest streak", "all time", t["coral"]),
         (fmt(st["commits"]), "commits", "past year", t["amber"]),
-        (fmt(st["prs"]), "pull requests", "all time", t["teal"]),
+        (fmt(st.get("stars", st["prs"])), "stars earned" if "stars" in st else "pull requests", "all repos" if "stars" in st else "all time", t["teal"]),
         (fmt(st["repos"]), "public repos", "owned", t["coral"]),
     ]
     parts = [
@@ -771,6 +847,8 @@ def main():
         write("header", theme, header(cfg, t))
         write("typing", theme, typing(cfg, t))
         write("timeline", theme, timeline(cfg, t))
+        if cfg.get("letscook"):
+            write("letscook", theme, letscook(cfg, t))
         write("footer", theme, footer(cfg, t))
         for p in cfg.get("projects", []):
             write("card-" + slug(p["name"]), theme, project_card(p, t))

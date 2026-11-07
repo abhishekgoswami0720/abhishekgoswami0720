@@ -7,18 +7,20 @@
 [user]
 login    = "abhishekgoswami0720"
 name     = "Abhishek Goswami"
+role     = "Founder & Executive Chairman, Let's Cook"
 headline = "B.Tech CSE (AI & ML) · GLA University"
 location = "Barsana, India"
 greeting = "~$ whoami"
-chips    = ["AI / ML", "Full-stack", "Hackathons", "Community builder"]
+chips    = ["AI / ML", "Full-stack", "Open source", "Hackathons"]
 
 [typing]
 # Lines cycle forever in the typing banner. Keep each under ~60 characters.
 lines = [
+  "founder & executive chairman @ Let's Cook",
   "building AI products people actually use",
-  "Smart India Hackathon 2026 · internal top 45 of 450+",
-  "CodeFiesta 5.0 · top 15 → PIET Panipat grand finale",
-  "founder of Let's Cook, a student tech community",
+  "Jaanch: 3 AI agents that catch fake job offers",
+  "InReal: internships from 23 sites, scams removed",
+  "SIH 2026 · internal top 45 of 450+ teams",
   "preparing for Google Summer of Code 2027",
 ]
 
@@ -28,6 +30,12 @@ label   = "Let's Cook"
 message = "letscook.co.in"
 url     = "https://letscook.co.in"
 color   = "f5a524"
+
+[[links]]
+label   = "GitHub org"
+message = "LetsCook-Organization"
+url     = "https://github.com/LetsCook-Organization"
+color   = "2dd4bf"
 
 # [[links]]
 # label   = "LinkedIn"
@@ -45,7 +53,7 @@ color   = "f5a524"
 # icon: voice | shield | orbit | chart | spark      accent: amber | teal | coral
 [[projects]]
 name        = "MandiQ"
-repo        = "abhishekgoswami0720/Team-RootCause----MandiQ----SIH-2026"
+repo        = "abhishekgoswami0720/MandiQ"
 live        = "https://frontend-omega-fawn-51.vercel.app/"
 badge       = "SIH 2026 · team lead"
 description = "Voice-first procurement slot booking for farmers. Call an IVR line in your own language to book or check a mandi slot, no smartphone needed."
@@ -63,12 +71,31 @@ icon        = "shield"
 accent      = "teal"
 
 [[projects]]
+name        = "Jaanch"
+repo        = "abhishekgoswami0720/jaanch"
+badge       = "Fetch-A-Thon 3.0 · team lead"
+description = "Paste a job offer, get a 1–10 scam risk score with the reasons. Three AI agents on Fetch.ai Agentverse, used through ASI:One chat."
+stack       = ["Python", "uAgents", "ASI:One", "RDAP"]
+icon        = "scan"
+accent      = "coral"
+
+[[projects]]
+name        = "CodeOrbit"
+repo        = "LetsCook-Organization/CodeOrbit"
+live        = "https://codeorbit-c7q4.onrender.com/"
+badge       = "Let's Cook · open source"
+description = "A developer-growth dashboard: track skills, learning logs, projects and milestones in one place. Let's Cook's first open-source project."
+stack       = ["HTML", "CSS", "JavaScript", "MIT"]
+icon        = "orbit"
+accent      = "teal"
+
+[[projects]]
 name        = "NEXUS Countdown"
 repo        = "abhishekgoswami0720/NEXUS-Countdown"
 badge       = "3D · motion"
 description = "A cinematic countdown experience rendered in real-time 3D, with choreographed camera and UI motion."
 stack       = ["React", "TypeScript", "Three.js", "GSAP"]
-icon        = "orbit"
+icon        = "spark"
 accent      = "coral"
 
 [[projects]]
@@ -91,6 +118,30 @@ accent      = "amber"
 # icon        = "spark"
 # accent      = "teal"
 
+# ── Let's Cook feature card ──────────────────────────────────────────────────
+[letscook]
+name     = "Let's Cook"
+tagline  = "A student-run tech community. Beginner-first, open to every college in India."
+role     = "Founder & Executive Chairman"
+pillars  = ["Workshops", "Hackathons", "Open source", "Mentorship", "Community partnerships"]
+footnote = "letscook.co.in  ·  github.com/LetsCook-Organization"
+
+[[letscook.stats]]
+value = "~200"
+label = "community members"
+
+[[letscook.stats]]
+value = "7"
+label = "core team, The Foundry"
+
+[[letscook.stats]]
+value = "Oct 2026"
+label = "first workshop: Origin"
+
+[[letscook.stats]]
+value = "CodeOrbit"
+label = "first open-source project"
+
 # ── Tech stack (IDs from https://skillicons.dev) ─────────────────────────────
 [stack]
 icons   = ["py", "js", "ts", "html", "css", "react", "nodejs", "express", "fastapi", "flask",
@@ -98,30 +149,48 @@ icons   = ["py", "js", "ts", "html", "css", "react", "nodejs", "express", "fasta
 perline = 10
 
 # ── Timeline ("The road so far") ─────────────────────────────────────────────
-# status: done | next
+# status: done | next      accent: amber | teal | coral      tag: short label on the right
 [[timeline]]
 when   = "2026"
 title  = "Founded Let's Cook"
-detail = "Student-run tech community: workshops and hackathons"
-status = "done"
+detail = "Student-run tech community: beginner-first workshops and hackathons"
+tag    = "founder"
+accent = "amber"
 
 [[timeline]]
 when   = "Sep 2026"
 title  = "Smart India Hackathon"
-detail = "Internal round: top 45 of 450+ teams, leading MandiQ"
-status = "done"
+detail = "Led Team RootCause with MandiQ: internal top 45 of 450+ teams"
+tag    = "team lead"
+accent = "teal"
 
 [[timeline]]
 when   = "Oct 2026"
-title  = "CodeFiesta 5.0"
-detail = "GIT Jaipur: top 15 with GigWallet, a Web3 credential wallet"
-status = "done"
+title  = "CodeFiesta 5.0, GIT Jaipur"
+detail = "Top 15 with GigWallet, a Web3 credential wallet for gig workers"
+tag    = "top 15"
+accent = "teal"
 
 [[timeline]]
 when   = "Oct 2026"
-title  = "PIET Panipat finale"
-detail = "36-hour grand finale: built InReal"
-status = "done"
+title  = "Grand finale, PIET Panipat"
+detail = "36 hours: built InReal, an internship search that removes scams"
+tag    = "finalist"
+accent = "teal"
+
+[[timeline]]
+when   = "Oct 2026"
+title  = "Fetch-A-Thon 3.0"
+detail = "Built Jaanch: three AI agents that score fake job offers"
+tag    = "team lead"
+accent = "teal"
+
+[[timeline]]
+when   = "Nov 2026"
+title  = "Let's Cook goes open source"
+detail = "Launched CodeOrbit under the LetsCook-Organization on GitHub"
+tag    = "open source"
+accent = "amber"
 
 [[timeline]]
 when   = "2027"
