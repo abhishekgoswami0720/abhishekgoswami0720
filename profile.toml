@@ -26,6 +26,12 @@ lines = [
 
 # Badges under the header. Add LinkedIn / email by uncommenting and filling in.
 [[links]]
+label   = "LinkedIn"
+message = "Abhishek Goswami"
+url     = "https://www.linkedin.com/in/abhishekgoswami0720/"
+color   = "0a66c2"
+
+[[links]]
 label   = "Let's Cook"
 message = "letscook.co.in"
 url     = "https://letscook.co.in"
@@ -36,12 +42,6 @@ label   = "GitHub org"
 message = "LetsCook-Organization"
 url     = "https://github.com/LetsCook-Organization"
 color   = "2dd4bf"
-
-# [[links]]
-# label   = "LinkedIn"
-# message = "Abhishek Goswami"
-# url     = "https://www.linkedin.com/in/YOUR-HANDLE"
-# color   = "0a66c2"
 
 # [[links]]
 # label   = "Email"
